@@ -62,7 +62,7 @@ class AuthController extends Controller
         }
 
         if (Auth::attempt($request->only('email', 'password'))) {
-            $user = User::where('email', $request->email)->first();
+            $user = User::where('email', $request->email)->whereNull('deleted_at')->first();
             $auth_token = $user->createToken('auth_token')->plainTextToken;
 
             $user_data = (object)[

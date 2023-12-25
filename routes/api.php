@@ -20,7 +20,8 @@ Route::post('/login', [AuthController::class, 'login']);
 
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
+    Route::resource('users', 'App\Http\Controllers\UserController');
+    Route::resource('luggage-types', 'App\Http\Controllers\LuggageTypeController');
+    Route::resource('trips', 'App\Http\Controllers\TripController');
+    Route::resource('orders', 'App\Http\Controllers\OrderController');
 });

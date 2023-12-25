@@ -1,6 +1,7 @@
 <?php
 define('DS',DIRECTORY_SEPARATOR);
-
+// Import all helper class files
+require __DIR__ . DS . 'AppGlobals.php';
 
 require __DIR__.DS.'app.php';
 require __DIR__.DS.'moments.php';
