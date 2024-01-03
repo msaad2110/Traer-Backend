@@ -19,6 +19,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 
+Route::get('/dropdowns', 'App\Http\Controllers\DropdownController@index');
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::resource('users', 'App\Http\Controllers\UserController');
     Route::resource('luggage-types', 'App\Http\Controllers\LuggageTypeController');

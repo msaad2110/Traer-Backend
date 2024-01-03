@@ -23,6 +23,7 @@ class User extends Authenticatable
         'country',
         'phone',
         'email',
+        'is_traveller',
         'password',
         'deleted_at',
         'deleted_by_id'

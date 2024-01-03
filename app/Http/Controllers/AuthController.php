@@ -23,7 +23,8 @@ class AuthController extends Controller
                     'phone' => 'required|unique:users,phone',
                     'country' => 'required',
                     'email' => 'required|email|unique:users,email',
-                    'password' => 'required|confirmed'
+                    'password' => 'required|confirmed',
+                    'is_traveller' => 'required'
                 ]
             );
 
