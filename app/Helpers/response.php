@@ -30,7 +30,7 @@ function wt_api_json_response($success = true, $message = '', $data = '', $code 
  *
  * @return JsonResponse
  */
-function wt_api_json_error($message, $code = 500, $data = [])
+function wt_api_json_error($message, $code = 500, $data = null)
 {
     return wt_api_json_response(false, $message, $data, $code);
 }
