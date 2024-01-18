@@ -21,4 +21,9 @@ class Order extends Model
         'deleted_at',
         'deleted_by_id',
     ];
+
+    public function trip()
+    {
+        return $this->belongsTo(Trip::class, 'trip_id', 'id');
+    }
 }

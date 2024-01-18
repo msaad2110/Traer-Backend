@@ -21,9 +21,9 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::get('/dropdowns', 'App\Http\Controllers\DropdownController@index');
 Route::post('/mail/website-mail', 'App\Http\Controllers\MailController@website_mail');
+Route::resource('orders', 'App\Http\Controllers\OrderController');
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::resource('users', 'App\Http\Controllers\UserController');
     Route::resource('luggage-types', 'App\Http\Controllers\LuggageTypeController');
     Route::resource('trips', 'App\Http\Controllers\TripController');
-    Route::resource('orders', 'App\Http\Controllers\OrderController');
 });
