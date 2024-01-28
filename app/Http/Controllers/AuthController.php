@@ -59,7 +59,7 @@ class AuthController extends Controller
         ]);
 
         if ($validate->fails()) {
-            return wt_api_json_error($validate->errors()->all());
+            return wt_api_json_error($validate->errors()->first());
         }
 
         if (Auth::attempt($request->only('email', 'password'))) {

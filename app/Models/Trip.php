@@ -22,4 +22,9 @@ class Trip extends Model
         'deleted_at',
         'deleted_by_id',
     ];
+
+    public function luggage_type()
+    {
+        return $this->belongsTo(LuggageType::class, 'luggage_type_id', 'id');
+    }
 }

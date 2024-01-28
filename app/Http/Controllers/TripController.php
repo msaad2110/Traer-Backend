@@ -19,7 +19,9 @@ class TripController extends Controller
     public function index(Request $request)
     {
         $user_id = get_user_id($request);
-        $trips = Trip::whereNull('deleted_at')->where('created_by_id', $user_id)->get();
+        $trips = Trip::whereNull('deleted_at')->where('created_by_id', $user_id)->with('luggage_type', function ($query) {
+            $query->select('id', 'name');
+        })->get();
 
         return wt_api_json_success($trips);
     }
@@ -139,7 +141,7 @@ class TripController extends Controller
      * @param  \App\Models\Trip  $trip
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request,$id)
+    public function destroy(Request $request, $id)
     {
 
         try {
