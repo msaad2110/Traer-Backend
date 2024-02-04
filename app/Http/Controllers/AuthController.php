@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\OTPMail;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\Password;
+use Seshac\Otp\Otp;
 
 class AuthController extends Controller
 {
@@ -74,6 +78,80 @@ class AuthController extends Controller
             return wt_api_json_success($user_data);
         } else {
             return wt_api_json_error("The password is not correct");
+        }
+    }
+
+    public function forgot_password(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'email' => 'required|exists:users,email'
+        ]);
+
+        if ($validate->fails()) {
+            return wt_api_json_error($validate->errors()->first());
+        }
+
+        $user = User::where('email', $request->email)->first();
+        $otp = Otp::generate($user->email); // generating the otp based on the user email
+
+        Mail::to($user->email)->send(new OTPMail($user, $otp));
+
+        return wt_api_json_success(null, null, "OTP sent to the user");
+    }
+
+    public function verify_otp(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'email' => 'required|exists:users,email',
+            'otp' => 'required'
+        ]);
+
+        if ($validate->fails()) {
+            return wt_api_json_error($validate->errors()->first());
+        }
+
+        try {
+            $user = User::where('email', $request->email)->first();
+            $otp = Otp::validate($user->email, $request->otp); // generating the otp based on the user email
+
+            if ($otp->status) {
+                return wt_api_json_success(null, null, "OTP verified");
+            } else {
+                throw new Exception($otp->message);
+            }
+        } catch (Exception $e) {
+            return wt_api_json_error($e->getMessage());
+        }
+    }
+
+    public function reset_password(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'email' => 'required|exists:users,email',
+            'password' => [
+                'required',
+                'string',
+                Password::min(8)
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols(),
+                'confirmed'
+            ]
+        ]);
+
+        if ($validate->fails()) {
+            return wt_api_json_error($validate->errors()->first());
+        }
+
+        try {
+            $user = User::where('email', $request->email)->first();
+            $user->update([
+                'password' => bcrypt($request->password)
+            ]);
+
+            return wt_api_json_success(null, null, "Password has been successfully reset");
+        } catch (Exception $e) {
+            return wt_api_json_error($e->getMessage());
         }
     }
 }

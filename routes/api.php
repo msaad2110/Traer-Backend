@@ -17,13 +17,16 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/forgot-password', [AuthController::class, 'forgot_password']);
+Route::post('/verify-otp', [AuthController::class, 'verify_otp']);
+Route::post('/reset-password', [AuthController::class, 'reset_password']);
 
 
 Route::get('/dropdowns', 'App\Http\Controllers\DropdownController@index');
 Route::post('/mail/website-mail', 'App\Http\Controllers\MailController@website_mail');
 
+Route::resource('users', 'App\Http\Controllers\UserController');
 Route::group(['middleware' => ['auth:sanctum']], function () {
-    Route::resource('users', 'App\Http\Controllers\UserController');
     Route::resource('luggage-types', 'App\Http\Controllers\LuggageTypeController');
     Route::resource('trips', 'App\Http\Controllers\TripController');
     Route::resource('orders', 'App\Http\Controllers\OrderController');

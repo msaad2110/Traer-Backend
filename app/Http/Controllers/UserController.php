@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\Password;
 
 class UserController extends Controller
 {
@@ -76,15 +78,52 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $action = $request->input('action');
         try {
 
             $user = User::findOrFail($id);
+            if ($action == 'update_profile') {
+                $validate = Validator::make($request->all(), [
+                    'email' => 'required|unique:users,email,' . $id,
+                    'first_name' => 'required',
+                    'last_name' => 'required',
+                    'phone' => 'required|unique:users,phone,' . $id,
+                ]);
 
-            $requestData = $request->all();
+                if ($validate->fails()) {
+                    return wt_api_json_error($validate->errors()->first());
+                }
 
-            $user->update($requestData);
 
-            return wt_api_json_success($user);
+                $requestData = $request->all();
+
+                $user->update($requestData);
+
+                return wt_api_json_success(null, null, "Profile Updated");
+            } else if ($action == 'change_password') {
+
+                $validate = Validator::make($request->all(), [
+                    'password' => [
+                        'required',
+                        'string',
+                        Password::min(8)
+                            ->mixedCase()
+                            ->numbers()
+                            ->symbols(),
+                        'confirmed'
+                    ]
+                ]);
+
+                if ($validate->fails()) {
+                    return wt_api_json_error($validate->errors()->first());
+                }
+
+                $user->update([
+                    'password' => bcrypt($request->password)
+                ]);
+
+                return wt_api_json_success(null, null, "Password changed successfully");
+            }
         } catch (Exception $e) {
             return wt_api_json_error($e->getMessage());
         }
