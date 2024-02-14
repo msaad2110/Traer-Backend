@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
 
@@ -106,12 +108,19 @@ class UserController extends Controller
                     'password' => [
                         'required',
                         'string',
-                        Password::min(8)
-                            ->mixedCase()
-                            ->numbers()
-                            ->symbols(),
+                        // Password::min(8)
+                        //     ->mixedCase()
+                        //     ->numbers()
+                        //     ->symbols(),
                         'confirmed'
-                    ]
+                    ],
+                    'old_password' => [
+                        'required', function ($attribute, $value, $fail) use($user) {
+                            if (!Hash::check($value, $user->password)) {
+                                $fail('Old Password didn\'t match');
+                            }
+                        },
+                    ],
                 ]);
 
                 if ($validate->fails()) {
