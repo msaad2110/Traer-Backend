@@ -19,7 +19,40 @@ class TripController extends Controller
     public function index(Request $request)
     {
         $user_id = get_user_id($request);
-        $trips = Trip::whereNull('deleted_at')->where('created_by_id', $user_id)->with('luggage_type', function ($query) {
+        $sort_order = $request->input('sort_order');
+        $sort_by = $request->input('sort_by');
+        $start_date = $request->input('start_date');
+        $end_date = $request->input('end_date');
+        $travelling_from = $request->input('travelling_from');
+        $luggage_space = $request->input('luggage_space');
+        $commission_start = $request->input('commission_start');
+        $commission_end = $request->input('commission_end');
+
+        $trips = Trip::whereNull('deleted_at')->where('created_by_id', $user_id);
+
+        if ($start_date != '' && $end_date != '') {
+            $trips->where([
+                ['start_date', '<=', $start_date],
+                ['end_date', '<=', $end_date],
+            ]);
+        }
+
+        if ($travelling_from != '') {
+            $trips->where('travelling_from', 'LIKE', "%{$travelling_from}%");
+        }
+        if ($luggage_space != '') {
+            $trips->where('luggage_space', 'LIKE', "%{$luggage_space}%");
+        }
+
+        if ($commission_start != '' && $commission_end != '') {
+            $trips->whereBetween('commission', [$commission_start, $commission_end]);
+        }
+
+        if ($sort_by != '' && $sort_order != '') {
+            $trips = $trips->orderBy($sort_by, $sort_order);
+        }
+
+        $trips = $trips->with('luggage_type', function ($query) {
             $query->select('id', 'name');
         })->get();
 

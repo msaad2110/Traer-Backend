@@ -15,6 +15,8 @@ class Trip extends Model
         'travelling_to',
         'start_date',
         'end_date',
+        'start_time',
+        'end_time',
         'luggage_space',
         'commission',
         'created_by_id',

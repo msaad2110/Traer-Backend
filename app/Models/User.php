@@ -27,7 +27,9 @@ class User extends Authenticatable
         'is_traveller',
         'password',
         'deleted_at',
-        'deleted_by_id'
+        'deleted_by_id',
+        'is_verified',
+        'verified_at',
     ];
 
     /**
