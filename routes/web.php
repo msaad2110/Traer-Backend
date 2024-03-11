@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,6 +16,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+Route::get('/migrate', function () {
+    echo Artisan::call('migrate');
 });
 
 // Route::resource('stripe', 'App\Http\Controllers\StripeController');
