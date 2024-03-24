@@ -97,9 +97,9 @@ class MediaController extends Controller
                     $request->all(),
                     [
                         'user_id' => 'required|exists:users,id',
-                        'document_type_id' => 'required|exists:document_types,id',
-                        'attachments' => 'required|array|min:1',
-                        'attachments.*' => ['required', File::type(['pdf', 'docx', 'txt'])->max(5000)]
+                        // 'document_type_id' => 'required|exists:document_types,id',
+                        // 'attachments' => 'required|array|min:1',
+                        // 'attachments.*' => ['required', File::type(['pdf', 'docx', 'txt'])->max(5000)]
                     ]
                 );
 
@@ -107,7 +107,10 @@ class MediaController extends Controller
                     return wt_api_json_error($validate->errors()->first());
                 }
 
-                Media::saveMedia($request);
+                $documents = json_decode($request->documents);
+                foreach ($documents as $document) {
+                    Media::saveMedia($document, $request->user_id);
+                }
 
                 return wt_api_json_success(null, null, "Document Uploaded Successfully");
             }
@@ -125,7 +128,7 @@ class MediaController extends Controller
     public function show($id)
     {
         $media = Media::find($id);
-        if(empty($media)){
+        if (empty($media)) {
             return wt_api_json_success("No Record Found.");
         }
         return wt_api_json_success($media->file_preview_path);

@@ -37,10 +37,12 @@ class Media extends Model
         return env("APP_URL") . '/' . $this->file_path;
     }
 
-    
-    public static function saveMedia($request)
+
+    public static function saveMedia($request, $userId = 0)
     {
-        $userId = get_user_id($request);
+        if ($userId == 0) {
+            $userId = get_user_id($request);
+        }
         $timestamp = date('Y-m-d H:i:s');
 
         if ($request->hasFile("attachments")) {
