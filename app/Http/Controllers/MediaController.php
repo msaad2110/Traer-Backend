@@ -9,6 +9,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\File;
 
+use function App\get_datetime_for_db;
+use function App\get_user_id;
+
 class MediaController extends Controller
 {
     /**
@@ -97,9 +100,10 @@ class MediaController extends Controller
                     $request->all(),
                     [
                         'user_id' => 'required|exists:users,id',
-                        // 'document_type_id' => 'required|exists:document_types,id',
-                        // 'attachments' => 'required|array|min:1',
-                        // 'attachments.*' => ['required', File::type(['pdf', 'docx', 'txt'])->max(5000)]
+                        'document_type_id' => 'required|array|min:1',
+                        'document_type_id.*' => 'exists:document_types,id',
+                        'attachments' => 'required|array|min:1',
+                        'attachments.*' => ['required', File::type(['pdf', 'docx', 'txt'])->max(5000)]
                     ]
                 );
 
@@ -107,9 +111,26 @@ class MediaController extends Controller
                     return wt_api_json_error($validate->errors()->first());
                 }
 
-                $documents = json_decode($request->documents);
-                foreach ($documents as $document) {
-                    Media::saveMedia($document, $request->user_id);
+                $userId = get_user_id($request);
+                $timestamp = get_datetime_for_db();
+                $document_type_id = $request->document_type_id;
+                foreach ($request->file('attachments') as $index => $file) {
+                    $originalFileName = $file->getClientOriginalName();
+                    $filePath = $file->store("attachments");
+
+                    $media = new Media();
+                    // $media->source_type = (int)$source_type;
+                    $media->document_type_id = (int)$document_type_id[$index];
+                    $media->name = $originalFileName;
+                    $media->file_name = $originalFileName;
+                    $media->file_path = $filePath;
+                    $media->created_at = $timestamp;
+                    $media->user_id = (int)$userId;
+                    $media->updated_at = $timestamp;
+                    // $media->updated_by_id = (int)$userId;
+                    if (!$media->save()) {
+                        throw new Exception('Failed to save media file entry in database for: ' . $originalFileName);
+                    }
                 }
 
                 return wt_api_json_success(null, null, "Document Uploaded Successfully");
