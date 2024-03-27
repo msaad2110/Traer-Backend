@@ -103,7 +103,7 @@ class MediaController extends Controller
                         'document_type_id' => 'required|array|min:1',
                         'document_type_id.*' => 'exists:document_types,id',
                         'attachments' => 'required|array|min:1',
-                        'attachments.*' => ['required', File::type(['pdf', 'docx', 'txt'])->max(5000)]
+                        'attachments.*' => ['required', 'file', 'max:5000', 'mimes:pdf,docx,txt']
                     ]
                 );
 
@@ -119,7 +119,6 @@ class MediaController extends Controller
                     $filePath = $file->store("attachments");
 
                     $media = new Media();
-                    // $media->source_type = (int)$source_type;
                     $media->document_type_id = (int)$document_type_id[$index];
                     $media->name = $originalFileName;
                     $media->file_name = $originalFileName;
@@ -127,7 +126,6 @@ class MediaController extends Controller
                     $media->created_at = $timestamp;
                     $media->user_id = (int)$userId;
                     $media->updated_at = $timestamp;
-                    // $media->updated_by_id = (int)$userId;
                     if (!$media->save()) {
                         throw new Exception('Failed to save media file entry in database for: ' . $originalFileName);
                     }
