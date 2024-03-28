@@ -101,7 +101,7 @@ class MediaController extends Controller
                     [
                         'user_id' => 'required|exists:users,id',
                         'document_type_id' => 'required|array|min:1',
-                        'document_type_id.*' => 'exists:document_types,id',
+                        // 'document_type_id.*' => 'exists:document_types,id',
                         'attachments' => 'required|array|min:1',
                         'attachments.*' => ['required']
                     ]
