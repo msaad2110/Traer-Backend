@@ -103,7 +103,7 @@ class MediaController extends Controller
                         'document_type_id' => 'required|array|min:1',
                         'document_type_id.*' => 'exists:document_types,id',
                         'attachments' => 'required|array|min:1',
-                        'attachments.*' => ['required', 'file', 'max:5000', 'mimes:pdf,docx,txt']
+                        'attachments.*' => ['required']
                     ]
                 );
 
