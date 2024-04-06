@@ -26,4 +26,8 @@ class Order extends Model
     {
         return $this->belongsTo(Trip::class, 'trip_id', 'id');
     }
+    public function created_by()
+    {
+        return $this->belongsTo(User::class, 'created_by_id', 'id');
+    }
 }

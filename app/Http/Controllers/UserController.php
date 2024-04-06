@@ -17,9 +17,15 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::whereNull('deleted_at')->get();
+        $email = $request->input('email');
+        $users = User::whereNull('deleted_at');
+
+        if ($email != '') {
+            $users->Where('email', $email);
+        }
+        $users = $users->get();
         return wt_api_json_success($users);
     }
 
@@ -115,7 +121,7 @@ class UserController extends Controller
                         'confirmed'
                     ],
                     'old_password' => [
-                        'required', function ($attribute, $value, $fail) use($user) {
+                        'required', function ($attribute, $value, $fail) use ($user) {
                             if (!Hash::check($value, $user->password)) {
                                 $fail('Old Password didn\'t match');
                             }

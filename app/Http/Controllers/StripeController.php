@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 use function App\get_user_id;
 
@@ -106,5 +107,22 @@ class StripeController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function payment_methods(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'user_id' => 'required|exists:users,id'
+        ]);
+
+        if ($validate->fails()) {
+            return wt_api_json_error($validate->errors()->first());
+        }
+
+        $id = $request->input('user_id');
+        $user = User::find($id);
+        $paymentMethods = $user->paymentMethods();
+
+        return wt_api_json_success($paymentMethods);
     }
 }

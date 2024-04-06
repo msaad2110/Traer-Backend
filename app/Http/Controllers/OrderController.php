@@ -19,7 +19,7 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $user_id = get_user_id($request);
-        $trips = Order::whereNull('deleted_at')->where('created_by_id', $user_id)->with('trip')->get();
+        $trips = Order::whereNull('deleted_at')->where('created_by_id', $user_id)->with('trip','created_by')->get();
 
         return wt_api_json_success($trips);
     }
