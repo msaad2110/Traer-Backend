@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Trip;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -28,6 +29,8 @@ class TripController extends Controller
         $commission_start = $request->input('commission_start');
         $commission_end = $request->input('commission_end');
 
+        $user = User::find($user_id);
+
         $trips = Trip::whereNull('deleted_at')->where('created_by_id', $user_id);
 
         if ($start_date != '' && $end_date != '') {
@@ -35,6 +38,10 @@ class TripController extends Controller
                 ['start_date', '<=', $start_date],
                 ['end_date', '<=', $end_date],
             ]);
+        }
+
+        if ($user->is_traveller == 1) {
+            $trips->where('created_by_id', $user_id);
         }
 
         if ($travelling_from != '') {
@@ -54,7 +61,9 @@ class TripController extends Controller
 
         $trips = $trips->with('luggage_type', function ($query) {
             $query->select('id', 'name');
-        })->get();
+        })
+            ->with('created_by')
+            ->get();
 
         return wt_api_json_success($trips);
     }

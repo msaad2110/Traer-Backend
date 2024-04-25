@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -19,7 +20,7 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $user_id = get_user_id($request);
-        $trips = Order::whereNull('deleted_at')->where('created_by_id', $user_id)->with('trip','created_by')->get();
+        $trips = Order::whereNull('deleted_at')->where('created_by_id', $user_id)->with('trip', 'created_by')->get();
 
         return wt_api_json_success($trips);
     }
@@ -49,6 +50,7 @@ class OrderController extends Controller
             'product_value' => 'required',
             'description' => 'required',
             'user_id' => 'required',
+            'customer_email' => 'required|email|exists:users,email'
         ]);
 
         if ($validate->fails()) {
@@ -60,6 +62,11 @@ class OrderController extends Controller
             $requestData = $request->all();
             $requestData['created_by_id'] = get_user_id($request);
             $requestData['updated_by_id'] = get_user_id($request);
+
+            $customer = User::where('email', $request->customer_email)->first();
+
+            $requestData['customer_id'] = $customer->id;
+            $requestData['tracking_number'] = Order::getNextCode();
 
             $Order = Order::create($requestData);
         } catch (Exception $e) {
@@ -126,7 +133,6 @@ class OrderController extends Controller
 
             $Order = Order::find($id);
             $Order->update($requestData);
-
         } catch (Exception $e) {
             return wt_api_json_error($e->getMessage());
         }
@@ -155,5 +161,22 @@ class OrderController extends Controller
         }
 
         return wt_api_json_success("Order Successfully Deleted");
+    }
+
+    public function track(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'tracking_number' => 'required|exists:orders,tracking_number',
+        ]);
+
+        if ($validate->fails()) {
+            return wt_api_json_error($validate->errors()->first());
+        }
+
+        $tracking_number = $request->input('tracking_number');
+
+        $order = Order::where('tracking_number', $tracking_number)->first();
+
+        return wt_api_json_success($order);
     }
 }

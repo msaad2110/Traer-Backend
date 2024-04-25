@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MediaController;
+use App\Http\Controllers\OrderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,19 +24,19 @@ Route::post('/verify-otp', [AuthController::class, 'verify_otp']);
 Route::post('/reset-password', [AuthController::class, 'reset_password']);
 
 
-Route::get('/dropdowns', 'App\Http\Controllers\DropdownController@index');
 Route::post('/mail/website-mail', 'App\Http\Controllers\MailController@website_mail');
 
+Route::get('/dropdowns', 'App\Http\Controllers\DropdownController@index');
 Route::get('/stripe/payment_methods', 'App\Http\Controllers\StripeController@payment_methods');
 Route::get('media/profile-picture', [MediaController::class, 'profile_picture']);
+Route::resource('luggage-types', 'App\Http\Controllers\LuggageTypeController');
+Route::resource('orders', 'App\Http\Controllers\OrderController');
+Route::resource('stripe', 'App\Http\Controllers\StripeController');
+Route::resource('trips', 'App\Http\Controllers\TripController');
+Route::resource('users', 'App\Http\Controllers\UserController');
+Route::get('/track-order','App\Http\Controllers\OrderController@track');
+
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::resource('document-types', 'App\Http\Controllers\DocumentTypeController');
     Route::resource('media', 'App\Http\Controllers\MediaController');
-    Route::resource('luggage-types', 'App\Http\Controllers\LuggageTypeController');
-    Route::resource('orders', 'App\Http\Controllers\OrderController');
-    Route::resource('stripe', 'App\Http\Controllers\StripeController');
-    Route::resource('trips', 'App\Http\Controllers\TripController');
-    Route::resource('users', 'App\Http\Controllers\UserController');
 });
-
-

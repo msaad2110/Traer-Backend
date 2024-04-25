@@ -29,4 +29,9 @@ class Trip extends Model
     {
         return $this->belongsTo(LuggageType::class, 'luggage_type_id', 'id');
     }
+
+    public function created_by()
+    {
+        return $this->belongsTo(User::class, 'created_by_id', 'id');
+    }
 }

@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class DocumentType extends Model
 {
     use HasFactory;
+
+    const DOCUMENT_TYPE_PROFILE_PICTURE = 1;
+
     protected $fillable = [
         'name',
         'deleted_at'
