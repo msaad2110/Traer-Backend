@@ -18,6 +18,7 @@ class Order extends Model
         'product_value',
         'description',
         'is_insured',
+        'status',
         'created_by_id',
         'updated_by_id',
         'deleted_at',

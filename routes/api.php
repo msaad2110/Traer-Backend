@@ -28,6 +28,7 @@ Route::post('/mail/website-mail', 'App\Http\Controllers\MailController@website_m
 
 Route::get('/dropdowns', 'App\Http\Controllers\DropdownController@index');
 Route::get('/stripe/payment_methods', 'App\Http\Controllers\StripeController@payment_methods');
+Route::get('/stripe/delete', 'App\Http\Controllers\StripeController@delete_payment_methods');
 Route::get('media/profile-picture', [MediaController::class, 'profile_picture']);
 Route::resource('luggage-types', 'App\Http\Controllers\LuggageTypeController');
 Route::resource('orders', 'App\Http\Controllers\OrderController');

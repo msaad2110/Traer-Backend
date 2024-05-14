@@ -20,9 +20,24 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $user_id = get_user_id($request);
-        $trips = Order::whereNull('deleted_at')->where('created_by_id', $user_id)->with('trip', 'created_by')->get();
+        $is_traveller = $request->input('is_traveller');
+        $status = $request->input('status');
+        $orders = Order::whereNull('deleted_at');
 
-        return wt_api_json_success($trips);
+        if ($is_traveller) {
+            $orders->where('created_by_id', $user_id);
+        } else {
+            $orders->where('customer_id', $user_id);
+        }
+
+        if ($status!='') {
+            $orders->where('status', $status);
+        }
+
+
+        $orders = $orders->with('trip', 'created_by')->get();
+
+        return wt_api_json_success($orders);
     }
 
     /**

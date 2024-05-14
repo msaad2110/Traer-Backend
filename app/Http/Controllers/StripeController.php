@@ -104,9 +104,22 @@ class StripeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+        $validate = Validator::make($request->all(), [
+            'payment_method_id' => 'required'
+        ]);
+
+        if ($validate->fails()) {
+            return wt_api_json_error($validate->errors()->first());
+        }
+
+        $user = User::find($id);
+        $paymentMethodId = $request->input('payment_method_id');
+        $paymentMethod = $user->findPaymentMethod($paymentMethodId);
+        $paymentMethod->delete();
+
+        return wt_api_json_success("Payment Method Deleted Successfully");
     }
 
     public function payment_methods(Request $request)
@@ -124,5 +137,33 @@ class StripeController extends Controller
         $paymentMethods = $user->paymentMethods();
 
         return wt_api_json_success($paymentMethods);
+    }
+
+    public function delete_payment_methods(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'payment_method_id' => 'required',
+            'user_id' => 'required|exists:users,id'
+        ]);
+
+        if ($validate->fails()) {
+            return wt_api_json_error($validate->errors()->first());
+        }
+        try {
+
+            $paymentMethodId = $request->input('payment_method_id');
+            $id = $request->input('user_id');
+            $user = User::find($id);
+            $paymentMethod = $user->findPaymentMethod($paymentMethodId);
+            if ($paymentMethod) {
+                $paymentMethod->delete();
+            } else {
+                return wt_api_json_success("No payment method found");
+            }
+
+            return wt_api_json_success("Payment Method Deleted Successfully");
+        } catch (Exception $e) {
+            return wt_api_json_success($e->getMessage());
+        }
     }
 }

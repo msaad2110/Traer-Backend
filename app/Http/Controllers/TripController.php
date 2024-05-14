@@ -28,6 +28,7 @@ class TripController extends Controller
         $luggage_space = $request->input('luggage_space');
         $commission_start = $request->input('commission_start');
         $commission_end = $request->input('commission_end');
+        $is_traveller = $request->input('is_traveller');
 
         $user = User::find($user_id);
 
@@ -40,7 +41,7 @@ class TripController extends Controller
             ]);
         }
 
-        if ($user->is_traveller == 1) {
+        if ($is_traveller == 1) {
             $trips->where('created_by_id', $user_id);
         }
 
