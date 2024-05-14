@@ -32,7 +32,7 @@ class TripController extends Controller
 
         $user = User::find($user_id);
 
-        $trips = Trip::whereNull('deleted_at')->where('created_by_id', $user_id);
+        $trips = Trip::whereNull('deleted_at');
 
         if ($start_date != '' && $end_date != '') {
             $trips->where([
