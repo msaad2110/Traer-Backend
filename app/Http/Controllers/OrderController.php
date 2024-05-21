@@ -128,18 +128,18 @@ class OrderController extends Controller
     public function update(Request $request, $id)
     {
 
-        $validate = Validator::make($request->all(), [
-            'luggage_type_id' => 'required|exists:luggage_types,id',
-            'trip_id' => 'required|exists:trips,id',
-            'product_space' => 'required',
-            'product_value' => 'required',
-            'description' => 'required',
-            'user_id' => 'required',
-        ]);
+        // $validate = Validator::make($request->all(), [
+        //     'luggage_type_id' => 'required|exists:luggage_types,id',
+        //     'trip_id' => 'required|exists:trips,id',
+        //     'product_space' => 'required',
+        //     'product_value' => 'required',
+        //     'description' => 'required',
+        //     'user_id' => 'required',
+        // ]);
 
-        if ($validate->fails()) {
-            return wt_api_json_error($validate->errors()->first());
-        }
+        // if ($validate->fails()) {
+        //     return wt_api_json_error($validate->errors()->first());
+        // }
 
         try {
 
