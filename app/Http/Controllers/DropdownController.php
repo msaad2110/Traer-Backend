@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 
@@ -152,6 +153,11 @@ class DropdownController extends Controller
 
         $token = json_decode($responseBody);
         return $token->auth_token;
+    }
+
+    public function order_status(Request $request)
+    {
+        return Order::STATUS_OBJECT;
     }
 }
 

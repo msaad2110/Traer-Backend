@@ -9,6 +9,28 @@ class Order extends Model
 {
     use HasFactory;
 
+    const STATUS_RECEIVED = 1;
+    const STATUS_ORDER_PURCHASED = 2;
+    const STATUS_ON_THE_WAY = 3;
+    const STATUS_ARRIVED = 4;
+    const STATUS_SHIPPED = 5;
+
+    const STATUS_NAME = [
+        self::STATUS_RECEIVED => 'Received',
+        self::STATUS_ORDER_PURCHASED => 'Order Purchased',
+        self::STATUS_ON_THE_WAY => 'On The Way',
+        self::STATUS_ARRIVED => 'Arrived',
+        self::STATUS_SHIPPED => 'Shipped',
+    ];
+
+    const STATUS_OBJECT = [
+        ['value' => self::STATUS_NAME[self::STATUS_RECEIVED], 'label' => self::STATUS_NAME[self::STATUS_RECEIVED]],
+        ['value' => self::STATUS_NAME[self::STATUS_ORDER_PURCHASED], 'label' => self::STATUS_NAME[self::STATUS_ORDER_PURCHASED]],
+        ['value' => self::STATUS_NAME[self::STATUS_ON_THE_WAY], 'label' => self::STATUS_NAME[self::STATUS_ON_THE_WAY]],
+        ['value' => self::STATUS_NAME[self::STATUS_ARRIVED], 'label' => self::STATUS_NAME[self::STATUS_ARRIVED]],
+        ['value' => self::STATUS_NAME[self::STATUS_SHIPPED], 'label' => self::STATUS_NAME[self::STATUS_SHIPPED]],
+    ];
+
     protected $fillable = [
         'luggage_type_id',
         'trip_id',
