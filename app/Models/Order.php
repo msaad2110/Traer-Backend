@@ -24,11 +24,11 @@ class Order extends Model
     ];
 
     const STATUS_OBJECT = [
-        ['value' => self::STATUS_NAME[self::STATUS_RECEIVED], 'label' => self::STATUS_NAME[self::STATUS_RECEIVED]],
-        ['value' => self::STATUS_NAME[self::STATUS_ORDER_PURCHASED], 'label' => self::STATUS_NAME[self::STATUS_ORDER_PURCHASED]],
-        ['value' => self::STATUS_NAME[self::STATUS_ON_THE_WAY], 'label' => self::STATUS_NAME[self::STATUS_ON_THE_WAY]],
-        ['value' => self::STATUS_NAME[self::STATUS_ARRIVED], 'label' => self::STATUS_NAME[self::STATUS_ARRIVED]],
-        ['value' => self::STATUS_NAME[self::STATUS_SHIPPED], 'label' => self::STATUS_NAME[self::STATUS_SHIPPED]],
+        ['value' => self::STATUS_RECEIVED, 'label' => self::STATUS_NAME[self::STATUS_RECEIVED]],
+        ['value' => self::STATUS_ORDER_PURCHASED, 'label' => self::STATUS_NAME[self::STATUS_ORDER_PURCHASED]],
+        ['value' => self::STATUS_ON_THE_WAY, 'label' => self::STATUS_NAME[self::STATUS_ON_THE_WAY]],
+        ['value' => self::STATUS_ARRIVED, 'label' => self::STATUS_NAME[self::STATUS_ARRIVED]],
+        ['value' => self::STATUS_SHIPPED, 'label' => self::STATUS_NAME[self::STATUS_SHIPPED]],
     ];
 
     protected $fillable = [
