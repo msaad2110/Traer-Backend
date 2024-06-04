@@ -30,7 +30,7 @@ class OrderController extends Controller
             $orders->where('customer_id', $user_id);
         }
 
-        if ($status!='') {
+        if ($status != '') {
             $orders->where('status', $status);
         }
 
@@ -193,5 +193,34 @@ class OrderController extends Controller
         $order = Order::where('tracking_number', $tracking_number)->first();
 
         return wt_api_json_success($order);
+    }
+
+    public function pay(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'payment_method_id' => 'required',
+            'user_id' => 'required',
+            'order_id' => 'required'
+        ], [
+            'payment_method_id.required' => 'Please select a payment method',
+            'order_id.required' => 'Please select an order to pay'
+        ]);
+        if ($validate->fails()) {
+            return wt_api_json_error($validate->errors()->first());
+        }
+
+        try {
+
+            $order = Order::find($request->order_id);
+            $user = User::find($request->user_id);
+            $stripeCharge = $user->charge(
+                $order->product_value,
+                $request->payment_method_id
+            );
+
+            return wt_api_json_success($stripeCharge);
+        } catch (Exception $e) {
+            return wt_api_json_error($e->getMessage());
+        }
     }
 }
