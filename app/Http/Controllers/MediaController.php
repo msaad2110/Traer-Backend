@@ -202,6 +202,8 @@ class MediaController extends Controller
     public function attachments($file_name)
     {
         $path = "attachments/" . $file_name;
+
+        dd($path);
         if (Storage::exists($path)) {
             return Storage::download($path);
         }
