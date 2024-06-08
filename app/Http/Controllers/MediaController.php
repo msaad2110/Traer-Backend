@@ -6,6 +6,7 @@ use App\Models\DocumentType;
 use App\Models\Media;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\File;
 
@@ -196,5 +197,14 @@ class MediaController extends Controller
         }
 
         return wt_api_json_success("Document Successfully Deleted");
+    }
+
+    public function attachments($file_name)
+    {
+        $path = "attachments/" . $file_name;
+        if (Storage::exists($path)) {
+            return Storage::download($path);
+        }
+        abort(404);
     }
 }
