@@ -203,7 +203,6 @@ class MediaController extends Controller
     {
         $path = "attachments/" . $file_name;
 
-        dd($path);
         if (Storage::exists($path)) {
             return Storage::download($path);
         }

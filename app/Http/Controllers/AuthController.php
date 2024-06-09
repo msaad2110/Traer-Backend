@@ -92,7 +92,7 @@ class AuthController extends Controller
         }
 
         $user = User::where('email', $request->email)->first();
-        $otp = Otp::generate($user->email); // generating the otp based on the user email
+        $otp = Otp::setValidity(740)->generate($user->email); // generating the otp based on the user email
 
         Mail::to($user->email)->send(new OTPMail($user, $otp));
 
