@@ -50,7 +50,11 @@ class Media extends Model
             if (is_array($files)) {
                 foreach ($request->file('attachments') as $file) {
                     $originalFileName = $file->getClientOriginalName();
-                    $filePath = $file->store("attachments");
+                    $fileName = rand(111111, 999999) . '-' . $originalFileName;
+
+                    $file->move(public_path('uploads'), $fileName);
+
+                    $filePath = 'uploads/' . $fileName;
 
                     $media = new Media();
                     // $media->source_type = (int)$source_type;
@@ -68,8 +72,10 @@ class Media extends Model
                 }
             } else {
                 $originalFileName = $files->getClientOriginalName();
-                $filePath = $files->store("attachments");
+                $fileName = rand(111111, 999999) . '-' . $originalFileName;
+                $files->move(public_path('uploads'), $fileName);
 
+                $filePath = 'uploads/' . $fileName;
                 $media = new Media();
                 // $media->source_type = (int)$source_type;
                 $media->document_type_id = (int)$request->document_type_id;

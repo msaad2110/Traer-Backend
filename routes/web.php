@@ -14,11 +14,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/attachments/{file_name}', 'App\Http\Controllers\MediaController@attachments')->name('attachments');
 Route::get('/', function () {
     return view('welcome');
 });
 Route::get('/migrate', function () {
     echo Artisan::call('migrate');
 });
-Route::get('/attachments/{file_name}', 'App\Http\Controllers\MediaController@attachments')->name('attachments');
 // Route::resource('stripe', 'App\Http\Controllers\StripeController');

@@ -38,7 +38,7 @@ Route::resource('users', 'App\Http\Controllers\UserController');
 Route::get('/track-order','App\Http\Controllers\OrderController@track');
 Route::post('/pay-order','App\Http\Controllers\OrderController@pay');
 
+Route::resource('media', 'App\Http\Controllers\MediaController');
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::resource('document-types', 'App\Http\Controllers\DocumentTypeController');
-    Route::resource('media', 'App\Http\Controllers\MediaController');
 });

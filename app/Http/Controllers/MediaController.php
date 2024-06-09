@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\File;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 use function App\get_datetime_for_db;
 use function App\get_user_id;
@@ -117,7 +118,11 @@ class MediaController extends Controller
                 $document_type_id = $request->document_type_id;
                 foreach ($request->file('attachments') as $index => $file) {
                     $originalFileName = $file->getClientOriginalName();
-                    $filePath = $file->store("attachments");
+                    $fileName = rand(111111, 999999).'-'.$originalFileName;
+
+                    $file->move(public_path('uploads'), $fileName);
+
+                    $filePath ='uploads/' . $fileName;
 
                     $media = new Media();
                     $media->document_type_id = (int)$document_type_id[$index];
@@ -204,7 +209,10 @@ class MediaController extends Controller
         $path = "attachments/" . $file_name;
 
         if (Storage::exists($path)) {
-            return Storage::download($path);
+            // Generate the download response
+            $response = Storage::download($path);
+
+            return $response;
         }
         abort(404);
     }
