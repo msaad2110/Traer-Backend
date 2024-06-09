@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\Transaction;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -212,12 +213,21 @@ class OrderController extends Controller
         try {
 
             $order = Order::find($request->order_id);
-            $user = User::find($request->user_id);
-            $stripeCharge = $user->charge(
+            $customer = User::find($order->customer_id);
+            if (!$customer) {
+                return wt_api_json_error("No customer found on this error");
+            }
+            $stripeCharge = $customer->charge(
                 $order->product_value,
                 $request->payment_method_id
             );
 
+            // if ($stripeCharge) {
+            Transaction::create([
+                'amount' => $order->product_value,
+                'user_id' => $order->created_by_id
+            ]);
+            // }
             return wt_api_json_success($stripeCharge);
         } catch (Exception $e) {
             return wt_api_json_error($e->getMessage());

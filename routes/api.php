@@ -35,8 +35,10 @@ Route::resource('orders', 'App\Http\Controllers\OrderController');
 Route::resource('stripe', 'App\Http\Controllers\StripeController');
 Route::resource('trips', 'App\Http\Controllers\TripController');
 Route::resource('users', 'App\Http\Controllers\UserController');
-Route::get('/track-order','App\Http\Controllers\OrderController@track');
-Route::post('/pay-order','App\Http\Controllers\OrderController@pay');
+Route::resource('checkouts', 'App\Http\Controllers\CheckoutController');
+Route::get('/track-order', 'App\Http\Controllers\OrderController@track');
+Route::post('/pay-order', 'App\Http\Controllers\OrderController@pay');
+Route::get('/wallet/balance', 'App\Http\Controllers\TransactionController@balance');
 
 Route::resource('media', 'App\Http\Controllers\MediaController');
 Route::group(['middleware' => ['auth:sanctum']], function () {
