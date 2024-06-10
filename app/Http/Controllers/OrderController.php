@@ -58,11 +58,15 @@ class OrderController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
+    
     {
+        Validator::extend('max_product_space', function ($attribute, $value, $parameters, $validator) {
+            return $value <= 100;
+        });
         $validate = Validator::make($request->all(), [
             'luggage_type_id' => 'required|exists:luggage_types,id',
             'trip_id' => 'required|exists:trips,id',
-            'product_space' => 'required|numeric|max:100',
+            'product_space' => 'required|numeric|max_product_space',
             'product_value' => 'required',
             'description' => 'required',
             'user_id' => 'required',
