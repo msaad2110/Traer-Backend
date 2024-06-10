@@ -218,7 +218,7 @@ class OrderController extends Controller
             //     return wt_api_json_error("No customer found on this order");
             // }
             $stripeCharge = $customer->charge(
-                $order->product_value,
+                ($order->product_value) * 100,
                 $request->payment_method_id
             );
 
