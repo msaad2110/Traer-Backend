@@ -62,7 +62,7 @@ class OrderController extends Controller
         $validate = Validator::make($request->all(), [
             'luggage_type_id' => 'required|exists:luggage_types,id',
             'trip_id' => 'required|exists:trips,id',
-            'product_space' => 'required',
+            'product_space' => 'required|numeric|max:100',
             'product_value' => 'required',
             'description' => 'required',
             'user_id' => 'required',
