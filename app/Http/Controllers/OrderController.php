@@ -214,8 +214,8 @@ class OrderController extends Controller
 
             $order = Order::find($request->order_id);
             $customer = User::find($order->customer_id);
-            if (!$customer) {
-                return wt_api_json_error("No customer found on this error");
+            if (empty($customer)) {
+                return wt_api_json_error("No customer found on this order");
             }
             $stripeCharge = $customer->charge(
                 $order->product_value,
